@@ -1,0 +1,59 @@
+1 StartComputation
+  sendMessageToMultipleEdges
+---
+2 StartPreprocessingComputation
+  vData.setNeighbors(NeighborUtils.getNeighborsWritableArray(vertex)); // accept duplicate neighbors
+---
+3 SendAdjacencyListComputation
+  n/a
+---
+4 CountTrianglesComputation
+  use countCommonDuplicateNeighbors
+---
+5 FinishPreprocessingComputation
+  add new method: getNonDupNumEdges
+  sendMessageToMultipleEdges
+---
+6 CommunityInitializationComputation
+   n/a
+---
+7 StartWccIterationComputation
+  // do not use sendMessageToMultipleEdges because we need to know how many multi-edges are there
+---
+8 UpdateCommunityInfoComputation
+  change method: updateNeighborCommunityMap 
+  //modify this method to record edges between two vertices 
+  //0=community, 1=edgeNum
+---
+9 ComputeWccComputation
+  publishCommunityAggregates: modify to suit multi-edge
+  modify method: sendNeighborsInCommunityToNeighborsInCommunity
+    //modify: neighborsInCommunity + id
+    add new method: neighborsInCommunityWithSelfId
+  modify method: updateCommunityTriangleCounts
+    //modify to get neighbor id and neighbor in community, in order to use NeighborUtils.countCommonDuplicateNeighbors method
+---
+10 ChooseNextCommunityComputation
+  // do not use sendMessageToMultipleEdges because we need to know how many multi-edges are there
+  modify method: getNumberOfEdgesToCommunity
+    // edit to suit multi-edges
+  modify method: getCandidateCommunities
+---
+---
+WccVertexData
+  add new paramter: numNonDupEdges
+  modify: neighborCommunityMap, change value tyep to ArrayPrimitiveWritable from IntWritable
+---
+CommunityInitializationMessage
+  n/a
+---
+TransferMessage
+  n/a
+---
+NeighborUtils
+  add new method: getNeighborsWritableIterator
+  add new method: countCommonDuplicateNeighbors
+  modify method: getNeighborsInCommunity
+---
+WccVertexData
+  neighbors: can accept duplicate edges
