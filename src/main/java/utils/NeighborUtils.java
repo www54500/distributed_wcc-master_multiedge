@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Arrays;
 
 public class NeighborUtils {
   // Do not instantiate
@@ -100,10 +101,6 @@ public class NeighborUtils {
       }
     }
     
-    for (int j : neighborNeighbors) {
-      if (vertex.getId().get()==3&&neighborId==74) Debug.println("NeighborUtils","j:"+j);
-    }
-    
     return edgesInTwoVertices * numCommonNeighbors;
   }
 
@@ -118,7 +115,6 @@ public class NeighborUtils {
     WccVertexData vData = vertex.getValue();
     MapWritable ncm = vData.getNeighborCommunityMap();
 
-    int numNeighborsInCommunity = 0;
     ArrayList<Integer> neighborsInCommunity = new ArrayList<Integer>();
     for(Map.Entry<Writable, Writable> entry : ncm.entrySet()) {
       int id = ((IntWritable) entry.getKey()).get();
@@ -160,5 +156,32 @@ public class NeighborUtils {
     }
     return new ArrayPrimitiveWritable(neighborsInCommunity);
     */
+  }
+  
+  /**
+   *  Get neighbors in same community
+   *  Add same neighbor several times if there are multi-edges between it
+   *  
+   */
+  public static ArrayPrimitiveWritable getMultiNeighborsInCommunity(
+      Vertex<IntWritable, WccVertexData, NullWritable> vertex) {
+    
+    int[] neighborsInCommunity = (int[]) getNeighborsInCommunity(vertex).get();
+    Arrays.sort(neighborsInCommunity);
+    
+    ArrayList<Integer> neighbors = new ArrayList<Integer>();
+    
+    for (Edge<IntWritable, NullWritable> e : vertex.getEdges()) {
+      int neighbor = e.getTargetVertexId().get();
+      if (Arrays.binarySearch(neighborsInCommunity, neighbor) >= 0) {
+        neighbors.add(neighbor);
+      }
+    }
+    
+    int[] arr = new int[neighbors.size()];
+    for (int i = 0; i < neighbors.size(); i++) {
+      arr[i] = neighbors.get(i);
+    }
+    return new ArrayPrimitiveWritable(arr);
   }
 }

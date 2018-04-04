@@ -93,23 +93,23 @@ public class ComputeWccComputation extends BasicComputation<
 
   private void sendNeighborsInCommunityToNeighborsInCommunity(
       Vertex<IntWritable, WccVertexData, NullWritable> vertex) {
-
-    ArrayPrimitiveWritable neighborsInCommunity =
-      NeighborUtils.getNeighborsInCommunity(vertex);
-
-    int[] nicArr = (int[]) neighborsInCommunity.get();
+    
+    int[] nicArr = (int[]) NeighborUtils.getNeighborsInCommunity(vertex).get();
+    
+    ArrayPrimitiveWritable multiNeighborsInCommunity =
+      NeighborUtils.getMultiNeighborsInCommunity(vertex);
 
     ArrayList<IntWritable> targets = new ArrayList();
 
     for (int i = currentStep; i < nicArr.length; i += stepsToDo) {
-    targets.add(new IntWritable(nicArr[i]));
+      targets.add(new IntWritable(nicArr[i]));
     }
     //sendMessageToMultipleEdges(targets.iterator(), neighborsInCommunity);
     
     //modify: neighborsInCommunity + id
     //modify to get neighbor id and neighbor in community
     sendMessageToMultipleEdges(targets.iterator(), 
-          neighborsInCommunityWithSelfId(vertex.getId(), neighborsInCommunity)); 
+          neighborsInCommunityWithSelfId(vertex.getId(), multiNeighborsInCommunity));
   }
 
   private void updateCommunityTriangleCounts(
@@ -168,7 +168,7 @@ public class ComputeWccComputation extends BasicComputation<
     int[] nicArr = (int[]) nic.get();
     int[] nicWithId = new int[nicArr.length + 1];
     for (int i = 0; i < nicArr.length; i++) {
-    nicWithId[i] = nicArr[i];
+      nicWithId[i] = nicArr[i];
     }
     nicWithId[nicArr.length] = id.get();
     
