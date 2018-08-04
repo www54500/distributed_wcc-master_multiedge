@@ -61,7 +61,7 @@ public class CountTrianglesComputation extends AbstractComputation<IntWritable,
         // Remove outgoing and incoming edges
         vertex.removeEdges(messageSourceWritable); 
         removeIncomingEdges(vertex.getId(), messageSourceWritable); //TODO refactor into neighborutils
-        ///*---display removed edges---------------------------------------------------------
+        /*---display removed edges---------------------------------------------------------
         if (messageSourceWritable.get() > vertex.getId().get()) { // for test
           System.out.println(vertex.getId().get() + "\t" + messageSourceWritable.get());
         } else {

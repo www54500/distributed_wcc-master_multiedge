@@ -89,7 +89,7 @@ public class NeighborUtils {
       int neighborId, int[] neighborNeighbors) {
     int[] myNeighbors = (int[]) vertex.getValue().getNeighbors().get();
     if (myNeighbors.length == 0) {
-      ArrayPrimitiveWritable neighborsInCommunity = NeighborUtils.getNeighborsInCommunity(vertex);
+      ArrayPrimitiveWritable neighborsInCommunity = NeighborUtils.getMultiNeighborsInCommunity(vertex);
       myNeighbors = (int[]) neighborsInCommunity.get();
     }
     int numCommonNeighbors = 0;
