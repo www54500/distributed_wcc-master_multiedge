@@ -3,6 +3,8 @@ package computation;
 
 import aggregators.*;
 import utils.*;
+import utils.IntNullHashSetEdges;
+import utils.IntNullArrayEdges;
 import computation.comm_initialization.*;
 import computation.preprocessing.*;
 import computation.wcc_iteration.*;
